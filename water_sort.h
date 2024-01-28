@@ -18,6 +18,7 @@ class waterSort {
     void choose_vial();
     void is_won();
     void new_level_anim();
+    void draw_icon();
   private:
     const CRGB colors[11] = {
         CRGB(0, 0, 0),

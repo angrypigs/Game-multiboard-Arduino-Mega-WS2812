@@ -32,4 +32,3 @@ uint8_t Stack::top_element() {
     }
     return 0;
 }
-

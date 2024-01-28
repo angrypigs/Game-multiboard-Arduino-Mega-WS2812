@@ -1,4 +1,5 @@
 #include "water_sort.h"
+#include "tetris.h"
 #include <FastLED.h>
 
 #define LED_PIN 23
@@ -55,32 +56,66 @@ unsigned long previous_millis = 0;
 const uint8_t HEIGHT = 16;
 const uint8_t WIDTH = 16;
 const int NUM_LEDS = HEIGHT * WIDTH;
+const uint8_t GAME_QUANTITY = 2;
 CRGB leds[NUM_LEDS];
 
 waterSort watersort = waterSort(leds);
+Tetris tetris = Tetris(leds);
 
-uint8_t current_game = 1;
+uint8_t current_game = 0;
+int8_t game_pointer = 0;
+
+
+void switch_game(int8_t game_add) {
+  game_pointer = (game_pointer + game_add + GAME_QUANTITY) % GAME_QUANTITY;
+  switch (game_pointer) {
+    case 0:
+      watersort.draw_icon();
+      break;
+    case 1:
+      tetris.draw_icon();
+      break;
+  }
+}
+
+void choose_game() {
+  switch (game_pointer) {
+    case 0:
+      watersort.reset_vials();
+      current_game = 1;
+      break;
+    case 1:
+      tetris.new_game();
+      current_game = 2;
+      break;
+  }
+}
 
 void handle_input(uint8_t index) {
   switch (current_game) {
+    case 0:
+      switch (index) {
+        case 0:
+          choose_game();
+          break;
+        case 7:
+          switch_game(-1);
+          break;
+        case 8:
+          switch_game(1);
+          break;
+      }
+      break;
     case 1:
       switch (index) {
         case 0:
           watersort.choose_vial();
-          break;
-        case 1:
-          break;
-        case 2:
-          break;
-        case 3:
           break;
         case 4:
           watersort.undo_move();
           break;
         case 5:
           watersort.restart_vials();
-          break;
-        case 6:
           break;
         case 7:
           watersort.move_pointers(-1, 0);
@@ -94,7 +129,27 @@ void handle_input(uint8_t index) {
         case 10:
           watersort.move_pointers(0, 1);
           break;
+      }
+      break;
+    case 2:
+      switch (index) {
+        case 0:
+          tetris.instant_down();
+          break;
+        case 7:
+          tetris.move(-1, 0);
+          break;
+        case 8:
+          tetris.move(1, 0);
+          break;
+        case 9:
+          tetris.move(0, 1);
+          break;
+        case 10:
+          tetris.rotate();
+          break;
         case 11:
+          tetris.game_frame();
           break;
       }
       break;
@@ -110,7 +165,7 @@ void setup() {
   }
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(10);
-  watersort.reset_vials();
+  switch_game(0);
   FastLED.show();
 }
 
@@ -159,7 +214,7 @@ void loop() {
   }
 
   unsigned long current_millis = millis();
-  if ((current_millis - previous_millis) > 40) {
+  if ((current_millis - previous_millis) > 39) {
     previous_millis = current_millis;
     handle_input(11);
   }

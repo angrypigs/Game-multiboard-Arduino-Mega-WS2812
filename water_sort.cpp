@@ -21,6 +21,23 @@ uint8_t waterSort::get_pixel(uint8_t x, uint8_t y) {
   return x*HEIGHT+((x%2==0) ? y : HEIGHT - y - 1);
 }
 
+void waterSort::draw_icon() {
+  fill_solid(leds, NUM_LEDS, CRGB(0, 0, 0));
+  const CRGB temp_colors[4] = {colors[1], colors[3], colors[4], colors[6]};
+  const uint8_t coords[4][4][2] = {
+    {{0, 3}, {1, 2}, {3, 0}, {3, 1}},
+    {{0, 1}, {1, 0}, {2, 3}, {3, 3}},
+    {{0, 0}, {1, 3}, {2, 1}, {3, 2}},
+    {{0, 2}, {1, 1}, {2, 0}, {2, 2}}
+  };
+  for (uint8_t col=0; col<4; col++) {
+    for (uint8_t b=0; b<4; b++) {
+      leds[get_pixel(4 + coords[col][b][0] * 2, 6 + coords[col][b][1])] = temp_colors[col];
+    }
+  }
+  FastLED.show();
+}
+
 void waterSort::shuffleArray(uint8_t *arr, size_t size) {
     // Tasowanie czwórek liczb
   for (size_t i = 0; i < size; i += 4) {
@@ -51,7 +68,8 @@ void waterSort::shuffleArray(uint8_t *arr, size_t size) {
 }
 
 void waterSort::reset_vials() {
-    for (int i=0; i<12; i++) {
+  fill_solid(leds, NUM_LEDS, CRGB(0, 0, 0));
+  for (int i=0; i<12; i++) {
     while (vials[i].top != 0) {
       vials[i].pop();
     }
