@@ -133,7 +133,10 @@ void handle_input(uint8_t index) {
       break;
     case 2:
       switch (index) {
-        case 0:
+        case 4:
+          tetris.rotate();
+          break;
+        case 5:
           tetris.instant_down();
           break;
         case 7:
@@ -144,9 +147,6 @@ void handle_input(uint8_t index) {
           break;
         case 9:
           tetris.move(0, 1);
-          break;
-        case 10:
-          tetris.rotate();
           break;
         case 11:
           tetris.game_frame();
