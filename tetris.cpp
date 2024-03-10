@@ -78,7 +78,7 @@ void Tetris::new_game() {
 }
 
 void Tetris::game_frame() {
-  if (frame_counter % 20 == 0) {
+  if (frame_counter % 80 == 0) {
     if (is_valid(current_y + 1, current_x, current_block, current_state)) {
       undraw_block(current_x + 1, current_y, current_block, current_state);
       current_y++;
@@ -127,7 +127,7 @@ void Tetris::game_frame() {
     }
   }
 
-  else if ((frame_counter % 3 == 0) && (rows_to_del.top != 0)) {
+  else if ((frame_counter % 12 == 0) && (rows_to_del.top != 0)) {
     uint8_t row = rows_to_del.pop();
     for (int i=row; i>0; i--) {
       for (int j=0; j<9; j++) {
@@ -136,7 +136,7 @@ void Tetris::game_frame() {
     }
     draw_matrix(true);
   }
-  frame_counter = (frame_counter + 1) % 60;
+  frame_counter = (frame_counter + 1) % 240;
 }
 
 void Tetris::move(int8_t add_x, int8_t add_y) {

@@ -1,0 +1,5 @@
+{
+    "sketch": "Game_multiboard_WS2812_Mega2560.ino",
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega"
+}

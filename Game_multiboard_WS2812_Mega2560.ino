@@ -214,7 +214,7 @@ void loop() {
   }
 
   unsigned long current_millis = millis();
-  if ((current_millis - previous_millis) > 39) {
+  if ((current_millis - previous_millis) > 9) {
     previous_millis = current_millis;
     handle_input(11);
   }
