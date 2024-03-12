@@ -10,10 +10,13 @@ uint8_t Animator::get_pixel(uint8_t x, uint8_t y) {
 
 void Animator::start() {
   current_animation = new animSnake1(leds);
+  current_animation->start();
 }
 
 void Animator::update() {
-
+  if (current_animation->update()) {
+    current_animation->start();
+  }
 }
 
 void Animator::draw_icon() {

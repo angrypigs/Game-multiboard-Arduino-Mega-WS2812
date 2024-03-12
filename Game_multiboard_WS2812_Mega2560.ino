@@ -1,5 +1,6 @@
 #include "water_sort.h"
 #include "tetris.h"
+#include "animator.h"
 #include <FastLED.h>
 
 #define LED_PIN 23
@@ -56,11 +57,12 @@ unsigned long previous_millis = 0;
 const uint8_t HEIGHT = 16;
 const uint8_t WIDTH = 16;
 const int NUM_LEDS = HEIGHT * WIDTH;
-const uint8_t GAME_QUANTITY = 2;
+const uint8_t GAME_QUANTITY = 3;
 CRGB leds[NUM_LEDS];
 
 waterSort watersort = waterSort(leds);
 Tetris tetris = Tetris(leds);
+Animator animator = Animator(leds);
 
 uint8_t current_game = 0;
 int8_t game_pointer = 0;
@@ -75,6 +77,9 @@ void switch_game(int8_t game_add) {
     case 1:
       tetris.draw_icon();
       break;
+    case 2:
+      animator.draw_icon();
+      break;
   }
 }
 
@@ -87,6 +92,10 @@ void choose_game() {
     case 1:
       tetris.new_game();
       current_game = 2;
+      break;
+    case 2:
+      animator.start();
+      current_game = 3;
       break;
   }
 }
@@ -117,6 +126,10 @@ void handle_input(uint8_t index) {
         case 5:
           watersort.restart_vials();
           break;
+        case 6:
+          current_game = 0;
+          switch_game(0);
+          break;
         case 7:
           watersort.move_pointers(-1, 0);
           break;
@@ -139,6 +152,10 @@ void handle_input(uint8_t index) {
         case 5:
           tetris.instant_down();
           break;
+        case 6:
+          current_game = 0;
+          switch_game(0);
+          break;
         case 7:
           tetris.move(-1, 0);
           break;
@@ -150,6 +167,17 @@ void handle_input(uint8_t index) {
           break;
         case 11:
           tetris.game_frame();
+          break;
+      }
+      break;
+    case 3:
+      switch (index) {
+        case 6:
+          current_game = 0;
+          switch_game(0);
+          break;
+        case 11:
+          animator.update();
           break;
       }
       break;
